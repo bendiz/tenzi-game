@@ -1,15 +1,22 @@
 import { React, useState, useEffect } from 'react';
 import './App.css';
 import Die from './components/Die';
+import { nanoid } from 'nanoid';
 
 function App() {
   const generateNumbers = () => {
     const randomDiceValues = [];
     for (let i = 0; i < 10; i++) {
-      randomDiceValues.push(Math.floor(Math.random() * 6 + 1));
+      randomDiceValues.push({
+        value: Math.floor(Math.random() * 6 + 1),
+        isHeld: false,
+        id: nanoid(),
+      });
     }
     return randomDiceValues;
   };
+
+  generateNumbers();
 
   const rollDice = (e) => {
     e.preventDefault();
@@ -17,7 +24,9 @@ function App() {
   };
 
   const [diceValues, setDiceValues] = useState(generateNumbers());
-  const dice = diceValues.map((die) => <Die value={die} />);
+  const dice = diceValues.map((die) => (
+    <Die value={die.value} key={die.id} isHeld={die.isHeld} id={die.id} />
+  ));
 
   return (
     <main className="App">
