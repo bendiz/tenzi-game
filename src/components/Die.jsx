@@ -1,3 +1,9 @@
+import React from 'react';
+
 export default function Die(props) {
-  return <div className="Die">{props.value}</div>;
+  return (
+    <div className="Die">
+      <h2>{props.value}</h2>
+    </div>
+  );
 }
