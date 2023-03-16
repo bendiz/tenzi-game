@@ -34,7 +34,7 @@ body {
 
 .Die {
   border-radius: 8px;
-  box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 3px 2px 9px -2px rgba(0, 0, 0, 0.2);
   color: #2b283a;
   font-size: 4rem;
   font-weight: 700;
@@ -55,6 +55,17 @@ body {
   justify-items: center;
   grid-template: auto auto / repeat(5, 1fr);
   gap: 1.8rem;
+}
+
+button {
+  font-family: Karla;
+  font-size: 3rem;
+  border: 0;
+  background-color: #5035ff;
+  border-radius: 10px;
+  color: #fff;
+  padding: 1.5rem 7rem;
+  margin-top: 2.5rem;
 }
 
 @media screen and (max-width: 700px) {
