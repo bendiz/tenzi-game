@@ -23,9 +23,26 @@ function App() {
     setDiceValues(generateNumbers);
   };
 
+  const holdDice = (id) => {
+    setDiceValues(
+      diceValues.map((die) => {
+        if (die.id === id) {
+          die.isHeld = !die.isHeld;
+        }
+        return die;
+      })
+    );
+  };
+
   const [diceValues, setDiceValues] = useState(generateNumbers());
+
   const dice = diceValues.map((die) => (
-    <Die value={die.value} key={die.id} isHeld={die.isHeld} id={die.id} />
+    <Die
+      value={die.value}
+      key={die.id}
+      isHeld={die.isHeld}
+      holdDice={() => holdDice(die.id)}
+    />
   ));
 
   return (
