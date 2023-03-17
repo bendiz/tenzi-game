@@ -63,6 +63,11 @@ p {
   max-width: 100px;
   width: 8vw;
   aspect-ratio: 1 / 1;
+  /* Disable user being able to select text */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer */
+  user-select: none;
 }
 
 .dice-container {
