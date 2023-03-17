@@ -81,6 +81,11 @@ button {
   color: #fff;
   padding: 1.5rem 7rem;
   margin-top: 2.5rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #5035ffd6;
 }
 
 @media screen and (max-width: 700px) {
