@@ -1,7 +1,8 @@
-import { React, useState, useEffect } from 'react';
-import './App.css';
-import Die from './components/Die';
-import { nanoid } from 'nanoid';
+import { React, useState, useEffect } from "react";
+import "./App.css";
+import Die from "./components/Die";
+import { nanoid } from "nanoid";
+import Confetti from "react-confetti";
 
 function App() {
   // Generates a single number
@@ -26,11 +27,21 @@ function App() {
   // Sets new dice values to a random number if the dice is not held
   const rollDice = (e) => {
     e.preventDefault();
-    setDiceValues(
-      diceValues.map((die) => {
-        return die.isHeld === true ? die : generateNumber();
-      })
-    );
+    // Checks if game has already been won
+    if (tenzi) {
+      restartGame();
+    } else {
+      setDiceValues(
+        diceValues.map((die) => {
+          return die.isHeld === true ? die : generateNumber();
+        })
+      );
+    }
+  };
+
+  const restartGame = () => {
+    setTenzi(false);
+    setDiceValues(generateNumbers());
   };
 
   // Toggles the dice being held / not held
@@ -46,6 +57,19 @@ function App() {
   };
 
   const [diceValues, setDiceValues] = useState(generateNumbers());
+  const [tenzi, setTenzi] = useState(false);
+
+  useEffect(() => {
+    let heldDice = diceValues.every((die) => die.isHeld);
+    if (heldDice) {
+      const sameValueCheck = diceValues.every(
+        (die) => die.value === diceValues[0].value
+      );
+      if (sameValueCheck) {
+        setTenzi(true);
+      }
+    }
+  }, [diceValues]);
 
   const dice = diceValues.map((die) => (
     <Die
@@ -58,8 +82,14 @@ function App() {
 
   return (
     <main className="App">
+      <h1>Tenzi</h1>
+      <p>
+        Roll until all dice are the same. Click each die to freeze it at its
+        current value between rolls.
+      </p>
       <div className="dice-container">{dice}</div>
-      <button onClick={rollDice}>Roll</button>
+      <button onClick={rollDice}>{!tenzi ? "Roll" : "Reset"}</button>
+      {tenzi && <Confetti />}
     </main>
   );
 }
