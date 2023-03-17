@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "createdoc": "jsdoc src -r -d docs"
   },
   "dependencies": {
     "nanoid": "^4.0.1",
