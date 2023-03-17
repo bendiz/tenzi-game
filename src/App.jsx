@@ -14,7 +14,7 @@ function App() {
     return newObject;
   };
 
-  // Generates an array of numbers (on game start/restart)
+  // Generates an array of numbers
   const generateNumbers = () => {
     const randomDiceValues = [];
     for (let i = 0; i < 10; i++) {
@@ -22,7 +22,6 @@ function App() {
     }
     return randomDiceValues;
   };
-  generateNumbers();
 
   // Sets new dice values to a random number if the dice is not held
   const rollDice = (e) => {
