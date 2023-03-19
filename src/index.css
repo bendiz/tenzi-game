@@ -135,13 +135,6 @@ p {
   right: 0;
 }
 
-.hidden {
-  display: none;
-}
-
-.game-info:hover {
-}
-
 button {
   font-family: Karla;
   font-size: 3rem;
