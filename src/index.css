@@ -93,6 +93,14 @@ p {
   margin-top: 2.5rem;
 }
 
+.Modal h2 {
+  font-size: 2rem;
+  display: inline-block;
+  border-bottom: 2px solid #fe4f276f;
+  width: 150px;
+  margin-bottom: 1rem;
+}
+
 .game-info {
   font-size: 3rem;
   vertical-align: top;
