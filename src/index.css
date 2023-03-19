@@ -35,16 +35,14 @@ body {
 h1 {
   font-family: Karla;
   font-size: 8rem;
+  display: inline;
 }
 
 p {
   font-family: Inter;
   font-size: 2rem;
   text-align: center;
-  max-width: 60%;
-
   color: #4a4e74;
-  margin-bottom: 2.5rem;
 }
 
 .Die {
@@ -58,6 +56,7 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   min-width: 45px;
   min-height: 45px;
   max-width: 100px;
@@ -70,11 +69,77 @@ p {
   user-select: none;
 }
 
+.Die .one {
+  position: relative;
+}
+
+.two {
+  position: relative;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.dot {
+  font-size: 8rem;
+  border-radius: 10px;
+}
+
 .dice-container {
   display: grid;
   justify-items: center;
   grid-template: auto auto / repeat(5, 1fr);
   gap: 1.8rem;
+  margin-top: 2.5rem;
+}
+
+.game-info {
+  font-size: 3rem;
+  vertical-align: top;
+  cursor: default;
+  color: #4a4e74;
+}
+
+.info-popup-backdrop {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(54, 54, 54, 0.237);
+  z-index: 998;
+  backdrop-filter: blur(4px);
+}
+
+.tooltip {
+  font-family: Inter;
+  position: absolute;
+  z-index: 999;
+  min-height: 200px;
+  max-width: 600px;
+  min-width: 230px;
+  background-color: rgba(255, 253, 253, 0.8);
+  text-align: center;
+  backdrop-filter: blur(4px);
+  border-radius: 10px;
+  padding: 3rem 2rem;
+}
+
+.x {
+  cursor: pointer;
+  padding: 0.2rem 1rem;
+  font-size: 2rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.game-info:hover {
 }
 
 button {
@@ -85,7 +150,7 @@ button {
   border-radius: 10px;
   color: #fff;
   padding: 1.5rem 7rem;
-  margin-top: 2.5rem;
+  margin-block: 2.5rem;
   cursor: pointer;
 }
 
@@ -121,8 +186,5 @@ button:hover {
 @media screen and (max-width: 350px) {
   h1 {
     margin-bottom: 1.5rem;
-  }
-  p {
-    display: none;
   }
 }

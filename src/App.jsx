@@ -1,10 +1,18 @@
 import { React, useState, useEffect } from "react";
 import "./App.css";
 import Die from "./components/Die";
+import Modal from "./components/Modal";
 import { nanoid } from "nanoid";
 import Confetti from "react-confetti";
 
 function App() {
+  const [diceRolls, setDiceRolls] = useState(0);
+  const [bestRound, setBestRound] = useState(
+    localStorage.getItem("best") || null
+  );
+  const [activeGame, setActiveGame] = useState(false);
+  const [modal, setModal] = useState(false);
+
   // Generates a single number
   const generateNumber = () => {
     let newObject = {
@@ -27,19 +35,22 @@ function App() {
   // Sets new dice values to a random number if the dice is not held
   const rollDice = (e) => {
     e.preventDefault();
+    setActiveGame(true);
+    setDiceRolls((prevRolls) => prevRolls + 1);
     // Checks if game has already been won
     if (tenzi) {
       restartGame();
     } else {
       setDiceValues(
         diceValues.map((die) => {
-          return die.isHeld === true ? die : generateNumber();
+          return die.isHeld ? die : generateNumber();
         })
       );
     }
   };
 
   const restartGame = () => {
+    setDiceRolls(0);
     setTenzi(false);
     setDiceValues(generateNumbers());
   };
@@ -56,6 +67,21 @@ function App() {
     );
   };
 
+  const calculateBestRound = () => {
+    if (diceRolls <= bestRound || !bestRound) {
+      setBestRound(diceRolls);
+      localStorage.setItem("best", bestRound.toString());
+    }
+  };
+
+  const toggleModal = () => {
+    setModal(true);
+  };
+
+  const closeModal = () => {
+    setModal(false);
+  };
+
   const [diceValues, setDiceValues] = useState(generateNumbers());
   const [tenzi, setTenzi] = useState(false);
 
@@ -66,6 +92,7 @@ function App() {
         (die) => die.value === diceValues[0].value
       );
       if (sameValueCheck) {
+        calculateBestRound();
         setTenzi(true);
       }
     }
@@ -82,14 +109,18 @@ function App() {
 
   return (
     <main className="App">
-      <h1>Tenzi</h1>
-      <p>
-        Roll until all dice are the same. Click each die to freeze it at its
-        current value between rolls.
-      </p>
+      <div>
+        <h1>Tenzi</h1>
+        <span className="game-info" onClick={toggleModal}>
+          ⓘ
+        </span>
+      </div>
+      {modal && <Modal closeModal={() => closeModal()} />}
       <div className="dice-container">{dice}</div>
-      <button onClick={rollDice}>{!tenzi ? "Roll" : "Reset"}</button>
+      <button onClick={rollDice}>{tenzi ? "Reset" : "Roll"}</button>
       {tenzi && <Confetti />}
+      <p>Number of rolls: {diceRolls}</p>
+      {bestRound ? <p>Best round: {bestRound}</p> : ""}
     </main>
   );
 }
