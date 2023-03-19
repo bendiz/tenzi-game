@@ -70,7 +70,7 @@ function App() {
   const calculateBestRound = () => {
     if (diceRolls <= bestRound || !bestRound) {
       setBestRound(diceRolls);
-      localStorage.setItem("best", bestRound.toString());
+      localStorage.setItem("best", bestRound);
     }
   };
 
