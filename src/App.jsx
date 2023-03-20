@@ -7,13 +7,11 @@ import Confetti from "react-confetti";
 
 function App() {
   const [diceRolls, setDiceRolls] = useState(0);
-  const [bestRound, setBestRound] = useState(null);
+  const [bestRound, setBestRound] = useState(
+    window.localStorage.getItem("bestround") || false
+  );
   const [activeGame, setActiveGame] = useState(false);
   const [modal, setModal] = useState(false);
-
-  useEffect(() => {
-    window.localStorage.setItem("bestround", JSON.stringify(bestRound));
-  }, [bestRound]);
 
   // Generates a single number
   const generateNumber = () => {
@@ -72,7 +70,6 @@ function App() {
   const calculateBestRound = () => {
     if (diceRolls <= bestRound || !bestRound) {
       setBestRound(diceRolls);
-      window.localStorage.setItem("bestround", bestRound);
     }
   };
 
@@ -86,6 +83,12 @@ function App() {
 
   const [diceValues, setDiceValues] = useState(generateNumbers());
   const [tenzi, setTenzi] = useState(false);
+
+  useEffect(() => {
+    if (tenzi) {
+      window.localStorage.setItem("bestround", bestRound);
+    }
+  }, [tenzi]);
 
   useEffect(() => {
     let heldDice = diceValues.every((die) => die.isHeld);
