@@ -121,8 +121,8 @@ function App() {
       <div className="dice-container">{dice}</div>
       <button onClick={rollDice}>{tenzi ? "Reset" : "Roll"}</button>
       {tenzi && <Confetti />}
-      {bestRound && <p>Number of rolls: {diceRolls}</p>}
-      <p>Best round: {bestRound}</p>
+      <p>Number of rolls: {diceRolls}</p>
+      {bestRound && <p>Best round: {bestRound}</p>}
     </main>
   );
 }
