@@ -288,6 +288,7 @@ button:hover {
   }
   .App {
     margin-top: 15vh;
+    margin-inline: 3rem;
   }
   .game-info {
     padding-left: 0.5rem;
