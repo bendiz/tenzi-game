@@ -10,6 +10,10 @@
     "createdoc": "jsdoc src -r -d docs"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.3.0",
+    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@tippyjs/react": "^4.2.6",
     "nanoid": "^4.0.1",
     "react": "^18.2.0",
     "react-confetti": "^6.1.0",
