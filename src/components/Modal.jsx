@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React } from "react";
 export default function Modal(props) {
   return (
     <div className={`info-popup-backdrop Modal`} onClick={props.closeModal}>
