@@ -2,8 +2,13 @@ import { React, useState, useEffect } from "react";
 import "./App.css";
 import Die from "./components/Die";
 import Modal from "./components/Modal";
+import Scoreboard from "./components/Scoreboard";
 import { nanoid } from "nanoid";
 import Confetti from "react-confetti";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrophy } from "@fortawesome/free-solid-svg-icons";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
 
 function App() {
   const [diceRolls, setDiceRolls] = useState(0);
@@ -12,6 +17,11 @@ function App() {
   );
   const [activeGame, setActiveGame] = useState(false);
   const [modal, setModal] = useState(false);
+  const [scoreboard, setScoreboard] = useState(false);
+  const [timer, setTimer] = useState(null);
+  const [bestTimer, setBestTimer] = useState(
+    window.localStorage.getItem("bestTimer") || false
+  );
 
   // Generates a single number
   const generateNumber = () => {
@@ -35,6 +45,9 @@ function App() {
   // Sets new dice values to a random number if the dice is not held
   const rollDice = (e) => {
     e.preventDefault();
+    if (!activeGame) {
+      setTimer(Date.now());
+    }
     setActiveGame(true);
     setDiceRolls((prevRolls) => prevRolls + 1);
     // Checks if game has already been won
@@ -81,14 +94,26 @@ function App() {
     setModal(false);
   };
 
+  const checkBestTime = () => {
+    const oldTimer = window.localStorage.getItem("bestTimer") || false;
+    if (timer < oldTimer || !oldTimer) {
+      setBestTimer(timer);
+    }
+  };
+
   const [diceValues, setDiceValues] = useState(generateNumbers());
   const [tenzi, setTenzi] = useState(false);
 
   useEffect(() => {
     if (tenzi) {
       window.localStorage.setItem("bestround", bestRound);
+      checkBestTime();
     }
   }, [tenzi]);
+
+  useEffect(() => {
+    window.localStorage.setItem("bestTimer", bestTimer);
+  }, [bestTimer]);
 
   useEffect(() => {
     let heldDice = diceValues.every((die) => die.isHeld);
@@ -98,7 +123,9 @@ function App() {
       );
       if (sameValueCheck) {
         calculateBestRound();
+        setTimer(((Date.now() - timer) / 1000).toFixed(2));
         setTenzi(true);
+        setActiveGame(false);
       }
     }
   }, [diceValues]);
@@ -112,20 +139,50 @@ function App() {
     />
   ));
 
+  const closeScoreboard = () => {
+    setScoreboard(false);
+  };
+
+  const toggleScoreboard = () => {
+    setScoreboard(true);
+  };
+
   return (
     <main className="App">
       <div>
         <h1>Tenzi</h1>
-        <span className="game-info" onClick={toggleModal}>
-          ⓘ
-        </span>
+        <Tippy content={<span>View game rules</span>} className="tooltip-info">
+          <span className="game-info" onClick={toggleModal}>
+            ⓘ
+          </span>
+        </Tippy>
       </div>
+      {diceRolls != 0 && <p>Number of rolls: {diceRolls}</p>}
+      {tenzi && <p>That round took: {timer} seconds!</p>}
       {modal && <Modal closeModal={() => closeModal()} />}
       <div className="dice-container">{dice}</div>
       <button onClick={rollDice}>{tenzi ? "Reset" : "Roll"}</button>
       {tenzi && <Confetti />}
-      <p>Number of rolls: {diceRolls}</p>
-      {bestRound && <p>Best round: {bestRound}</p>}
+      <div className="scoreboard">
+        <Tippy
+          content={<span>View your scores!</span>}
+          className="tooltip-info"
+        >
+          <FontAwesomeIcon
+            onClick={toggleScoreboard}
+            icon={faTrophy}
+            style={{ color: "#FFD700" }}
+            className="trophy-icon"
+          />
+        </Tippy>
+        {scoreboard && (
+          <Scoreboard
+            close={() => closeScoreboard()}
+            bestTime={bestTimer}
+            bestRound={bestRound}
+          />
+        )}
+      </div>
     </main>
   );
 }
