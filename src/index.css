@@ -111,10 +111,6 @@ p {
   user-select: none;
 }
 
-.dice-shell {
-  border-radius: 8px;
-}
-
 .dice.numbers {
   display: flex;
   justify-content: center;

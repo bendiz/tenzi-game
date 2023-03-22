@@ -200,13 +200,10 @@ function App() {
             >
               <span role="img">
                 {diceMode ? (
-                  <img
-                    src="src/assets/togglenum.png"
-                    className="toggleNumImg"
-                  />
+                  <img src="./assets/togglenum.png" className="toggleNumImg" />
                 ) : (
                   <img
-                    src="src/assets/toggledice.png"
+                    src="./assets/toggledice.png"
                     className="toggleDiceNum"
                   />
                 )}
