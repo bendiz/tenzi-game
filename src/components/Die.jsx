@@ -1,10 +1,15 @@
-import React from "react";
+import { React, useState } from "react";
 
 export default function Die(props) {
   const styles = {
     backgroundColor: props.isHeld ? "#59e391" : "#fff",
   };
   let dice;
+  let numbers = (
+    <div className="dice numbers">
+      <span className="number-text">{props.value}</span>
+    </div>
+  );
   switch (props.value) {
     case 1:
       dice = (
@@ -85,7 +90,7 @@ export default function Die(props) {
       style={styles}
       onClick={props.holdDice}
     >
-      {dice}
+      {props.diceMode ? dice : numbers}
     </div>
   );
 }

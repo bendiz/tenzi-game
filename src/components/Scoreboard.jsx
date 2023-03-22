@@ -10,10 +10,10 @@ export default function Scoreboard(props) {
         <br />
         <p>
           {props.bestRound
-            ? `Your best round: ${props.bestRound} dice rolls`
+            ? `Best round: ${props.bestRound} dice rolls`
             : "You haven't played yet! Check back in after you've played a round."}
           <br />
-          {props.bestTime ? `Your best time: ${props.bestTime} seconds` : ""}
+          {props.bestTime ? `Best time: ${props.bestTime} seconds` : ""}
         </p>
       </div>
     </div>

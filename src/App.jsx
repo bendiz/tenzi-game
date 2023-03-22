@@ -11,6 +11,7 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 
 function App() {
+  const [diceMode, setDiceMode] = useState(true);
   const [diceRolls, setDiceRolls] = useState(0);
   const [bestRound, setBestRound] = useState(
     window.localStorage.getItem("bestround") || false
@@ -136,6 +137,7 @@ function App() {
       key={die.id}
       isHeld={die.isHeld}
       holdDice={() => holdDice(die.id)}
+      diceMode={diceMode}
     />
   ));
 
@@ -147,10 +149,16 @@ function App() {
     setScoreboard(true);
   };
 
+  const toggleDiceGame = () => {
+    setDiceMode(!diceMode);
+    console.log("dice");
+  };
+
   return (
     <main className="App">
+      {tenzi && <Confetti />}
       <div>
-        <h1>Tenzi</h1>
+        <h1>Tenzies</h1>
         <Tippy content={<span>View game rules</span>} className="tooltip-info">
           <span className="game-info" onClick={toggleModal}>
             ⓘ
@@ -162,26 +170,57 @@ function App() {
       {modal && <Modal closeModal={() => closeModal()} />}
       <div className="dice-container">{dice}</div>
       <button onClick={rollDice}>{tenzi ? "Reset" : "Roll"}</button>
-      {tenzi && <Confetti />}
       <div className="scoreboard">
-        <Tippy
-          content={<span>View your scores!</span>}
-          className="tooltip-info"
-        >
-          <FontAwesomeIcon
-            onClick={toggleScoreboard}
-            icon={faTrophy}
-            style={{ color: "#FFD700" }}
-            className="trophy-icon"
-          />
-        </Tippy>
-        {scoreboard && (
-          <Scoreboard
-            close={() => closeScoreboard()}
-            bestTime={bestTimer}
-            bestRound={bestRound}
-          />
-        )}
+        <div className="menu">
+          <Tippy
+            content={<span>View your scores!</span>}
+            className="tooltip-info"
+          >
+            <FontAwesomeIcon
+              onClick={toggleScoreboard}
+              icon={faTrophy}
+              style={{ color: "#FFD700" }}
+              className="trophy-icon"
+            />
+          </Tippy>
+          {scoreboard && (
+            <Scoreboard
+              close={() => closeScoreboard()}
+              bestTime={bestTimer}
+              bestRound={bestRound}
+            />
+          )}
+          <Tippy
+            content={<span>Switch to {diceMode ? "numbers" : "dice"}</span>}
+            className="tooltip-info"
+          >
+            <label
+              htmlFor="diceOrNumbers"
+              className={diceMode ? "toggle-number" : "toggle-dice"}
+            >
+              <span role="img">
+                {diceMode ? (
+                  <img
+                    src="src/assets/togglenum.png"
+                    className="toggleNumImg"
+                  />
+                ) : (
+                  <img
+                    src="src/assets/toggledice.png"
+                    className="toggleDiceNum"
+                  />
+                )}
+              </span>
+              <input
+                type="checkbox"
+                name="diceOrNumbers"
+                id="diceOrNumbers"
+                checked={diceMode}
+                onChange={toggleDiceGame}
+              ></input>
+            </label>
+          </Tippy>
+        </div>
       </div>
     </main>
   );
