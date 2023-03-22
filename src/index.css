@@ -249,11 +249,11 @@ label > span {
 
 label img:hover {
   animation: shaking 0.4s;
-  background: #9481ff69;
+  background: #9481ff;
 }
 
 span > img {
-  background: #4a4e7446;
+  background: #9481ff69;
   padding: 0.3rem;
   border-radius: 100px;
   width: 40px;
