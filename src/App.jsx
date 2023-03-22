@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrophy } from "@fortawesome/free-solid-svg-icons";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
+import numberimg from "./assets/togglenum.png";
+import diceimg from "./assets/toggledice.png";
 
 function App() {
   const [diceMode, setDiceMode] = useState(true);
@@ -200,12 +202,9 @@ function App() {
             >
               <span role="img">
                 {diceMode ? (
-                  <img src="./assets/togglenum.png" className="toggleNumImg" />
+                  <img src={numberimg} className="toggleNumImg" />
                 ) : (
-                  <img
-                    src="./assets/toggledice.png"
-                    className="toggleDiceNum"
-                  />
+                  <img src={diceimg} className="toggleDiceNum" />
                 )}
               </span>
               <input
