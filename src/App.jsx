@@ -1,30 +1,30 @@
-import { React, useState, useEffect } from "react";
-import "./App.css";
-import Die from "./components/Die";
-import Modal from "./components/Modal";
-import Scoreboard from "./components/Scoreboard";
-import { nanoid } from "nanoid";
-import Confetti from "react-confetti";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrophy } from "@fortawesome/free-solid-svg-icons";
-import Tippy from "@tippyjs/react";
-import "tippy.js/dist/tippy.css";
-import numberimg from "./assets/togglenum.png";
-import diceimg from "./assets/toggledice.png";
+import { React, useState, useEffect } from 'react';
+import './App.css';
+import Die from './components/Die';
+import Modal from './components/Modal';
+import Scoreboard from './components/Scoreboard';
+import { nanoid } from 'nanoid';
+import Confetti from 'react-confetti';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrophy } from '@fortawesome/free-solid-svg-icons';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
+import numberimg from './assets/togglenum.png';
+import diceimg from './assets/toggledice.png';
 
 function App() {
   const [diceMode, setDiceMode] = useState(true);
   const [diceRolls, setDiceRolls] = useState(0);
-  const [bestRound, setBestRound] = useState(
-    window.localStorage.getItem("bestround") || false
-  );
   const [activeGame, setActiveGame] = useState(false);
-  const [modal, setModal] = useState(false);
-  const [scoreboard, setScoreboard] = useState(false);
-  const [timer, setTimer] = useState(null);
-  const [bestTimer, setBestTimer] = useState(
-    window.localStorage.getItem("bestTimer") || false
-  );
+  const [popups, setPopups] = useState({
+    modal: false,
+    scoreboard: false,
+  });
+  const [scores, setScores] = useState({
+    currentTimer: null,
+    bestTimer: window.localStorage.getItem('bestTimer') || false,
+    bestRound: window.localStorage.getItem('bestRound') || false,
+  });
 
   // Generates a single number
   const generateNumber = () => {
@@ -49,7 +49,11 @@ function App() {
   const rollDice = (e) => {
     e.preventDefault();
     if (!activeGame) {
-      setTimer(Date.now());
+      // setTimer(Date.now());
+      setScores({
+        ...scores,
+        currentTimer: Date.now(),
+      });
     }
     setActiveGame(true);
     setDiceRolls((prevRolls) => prevRolls + 1);
@@ -73,6 +77,7 @@ function App() {
 
   // Toggles the dice being held / not held
   const holdDice = (id) => {
+    console.log(scores);
     setDiceValues(
       diceValues.map((die) => {
         if (die.id === id) {
@@ -83,24 +88,23 @@ function App() {
     );
   };
 
+  // Calculates if this is the best round in terms of dice rolls
   const calculateBestRound = () => {
-    if (diceRolls <= bestRound || !bestRound) {
-      setBestRound(diceRolls);
+    if (diceRolls <= Number(scores.bestRound) || !scores.bestRound) {
+      return diceRolls;
+    } else {
+      return scores.bestRound;
     }
   };
 
-  const toggleModal = () => {
-    setModal(true);
-  };
-
-  const closeModal = () => {
-    setModal(false);
-  };
-
+  // Checks if the new time is better than the old time (if it exists in localstorage)
   const checkBestTime = () => {
-    const oldTimer = window.localStorage.getItem("bestTimer") || false;
-    if (timer < oldTimer || !oldTimer) {
-      setBestTimer(timer);
+    const oldTimer = window.localStorage.getItem('bestTimer') || false;
+    if (Number(scores.currentTimer) < oldTimer || !oldTimer) {
+      setScores({
+        ...scores,
+        bestTimer: scores.currentTimer,
+      });
     }
   };
 
@@ -109,14 +113,14 @@ function App() {
 
   useEffect(() => {
     if (tenzi) {
-      window.localStorage.setItem("bestround", bestRound);
+      window.localStorage.setItem('bestRound', scores.bestRound);
       checkBestTime();
     }
   }, [tenzi]);
 
   useEffect(() => {
-    window.localStorage.setItem("bestTimer", bestTimer);
-  }, [bestTimer]);
+    window.localStorage.setItem('bestTimer', scores.bestTimer);
+  }, [scores.bestTimer]);
 
   useEffect(() => {
     let heldDice = diceValues.every((die) => die.isHeld);
@@ -125,8 +129,11 @@ function App() {
         (die) => die.value === diceValues[0].value
       );
       if (sameValueCheck) {
-        calculateBestRound();
-        setTimer(((Date.now() - timer) / 1000).toFixed(2));
+        setScores({
+          ...scores,
+          bestRound: calculateBestRound(),
+          currentTimer: ((Date.now() - scores.currentTimer) / 1000).toFixed(2),
+        });
         setTenzi(true);
         setActiveGame(false);
       }
@@ -143,17 +150,31 @@ function App() {
     />
   ));
 
+  // POPUPS
+
+  const toggleModal = () => {
+    setPopups({
+      ...popups,
+      modal: true,
+    });
+  };
+
+  const closeModal = () => {
+    setPopups({ ...popups, modal: false });
+  };
+
   const closeScoreboard = () => {
-    setScoreboard(false);
+    // setScoreboard(false);
+    setPopups({ ...popups, scoreboard: false });
   };
 
   const toggleScoreboard = () => {
-    setScoreboard(true);
+    // setScoreboard(true);
+    setPopups({ ...popups, scoreboard: true });
   };
 
   const toggleDiceGame = () => {
     setDiceMode(!diceMode);
-    console.log("dice");
   };
 
   return (
@@ -168,10 +189,10 @@ function App() {
         </Tippy>
       </div>
       {diceRolls != 0 && <p>Number of rolls: {diceRolls}</p>}
-      {tenzi && <p>That round took: {timer} seconds!</p>}
-      {modal && <Modal closeModal={() => closeModal()} />}
+      {tenzi && <p>That round took: {scores.currentTimer} seconds!</p>}
+      {popups.modal && <Modal closeModal={() => closeModal()} />}
       <div className="dice-container">{dice}</div>
-      <button onClick={rollDice}>{tenzi ? "Reset" : "Roll"}</button>
+      <button onClick={rollDice}>{tenzi ? 'Reset' : 'Roll'}</button>
       <div className="scoreboard">
         <div className="menu">
           <Tippy
@@ -181,24 +202,24 @@ function App() {
             <FontAwesomeIcon
               onClick={toggleScoreboard}
               icon={faTrophy}
-              style={{ color: "#FFD700" }}
+              style={{ color: '#FFD700' }}
               className="trophy-icon"
             />
           </Tippy>
-          {scoreboard && (
+          {popups.scoreboard && (
             <Scoreboard
               close={() => closeScoreboard()}
-              bestTime={bestTimer}
-              bestRound={bestRound}
+              bestTime={scores.bestTimer}
+              bestRound={scores.bestRound}
             />
           )}
           <Tippy
-            content={<span>Switch to {diceMode ? "numbers" : "dice"}</span>}
+            content={<span>Switch to {diceMode ? 'numbers' : 'dice'}</span>}
             className="tooltip-info"
           >
             <label
               htmlFor="diceOrNumbers"
-              className={diceMode ? "toggle-number" : "toggle-dice"}
+              className={diceMode ? 'toggle-number' : 'toggle-dice'}
             >
               <span role="img">
                 {diceMode ? (
