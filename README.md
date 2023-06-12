@@ -9,7 +9,7 @@ Live: https://tenzi-bendiz.netlify.app/
 <h1 align="center">Hi 👋, I'm Benedicte</h1>
 <h3 align="center">From Norway 🇳🇴</h3>
 
-- 🌱 I’m currently learning **React, and Python**
+- 🌱 I’m currently learning **React**
 
 - 📝 I regularly post on twitter [www.twitter.com/bendizxo](www.twitter.com/bendizxo)
 
